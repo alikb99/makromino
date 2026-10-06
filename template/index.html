@@ -1,0 +1,1529 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مکرومینو</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Markazi+Text:wght@500;600;700&family=Vazirmatn:wght@300;400;500;700;800&display=swap">
+<style>
+/* Layout: mobile-first RTL storefront. Persian-arch hero with a live 3D plant hanger,
+   swipe rows for categories, 2-col product grid, sticky bottom nav on phones. */
+:root{
+  --bg:#EDEFE8;          /* unbleached cotton, sage-biased */
+  --surface:#FAFAF6;
+  --surface-2:#E3E7DE;
+  --ink:#1F2B27;
+  --muted:#5B6862;
+  --line:#D2D8CE;
+  --accent:#0E7A72;      /* firoozeh / turquoise glaze */
+  --accent-ink:#FFFFFF;
+  --accent-soft:#D3E8E3;
+  --saffron:#C98A1E;
+  --saffron-soft:#F4E3BF;
+  --danger:#B4452F;
+  --shadow:0 1px 2px rgba(31,43,39,.06),0 8px 24px rgba(31,43,39,.08);
+
+  --f-display:"Markazi Text","Vazirmatn",Tahoma,serif;
+  --f-body:"Vazirmatn",Tahoma,"Segoe UI",sans-serif;
+
+  --r-sm:10px; --r-md:16px; --r-lg:28px;
+  --gutter:16px;
+  --nav-h:64px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121A17; --surface:#1A2420; --surface-2:#222E29; --ink:#E7ECE6; --muted:#9DABA4;
+    --line:#2D3A35; --accent:#3BB3A8; --accent-ink:#0B1513; --accent-soft:#1D3833;
+    --saffron:#E6AE4A; --saffron-soft:#3A3020; --danger:#E07A63;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121A17; --surface:#1A2420; --surface-2:#222E29; --ink:#E7ECE6; --muted:#9DABA4;
+  --line:#2D3A35; --accent:#3BB3A8; --accent-ink:#0B1513; --accent-soft:#1D3833;
+  --saffron:#E6AE4A; --saffron-soft:#3A3020; --danger:#E07A63;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--f-body); font-size:15px; line-height:1.8;
+  direction:rtl; text-align:right;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));
+}
+@media (min-width:900px){ body{padding-bottom:0} }
+img,svg{max-width:100%;display:block}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+h1,h2,h3{text-wrap:balance;margin:0}
+p{margin:0}
+
+.wrap{max-width:1200px;margin-inline:auto;padding-inline:var(--gutter)}
+@media (min-width:700px){ :root{--gutter:28px} }
+
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:48px;padding:0 22px;border-radius:999px;border:1.5px solid transparent;
+  font-weight:700;font-size:15px;text-decoration:none;transition:transform .15s ease,background .2s;
+}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-ghost{background:transparent;border-color:var(--ink);color:var(--ink)}
+.btn-block{width:100%}
+.icon-btn{
+  width:44px;height:44px;border-radius:50%;border:0;background:transparent;
+  display:inline-grid;place-items:center;position:relative;
+}
+.icon-btn svg{width:24px;height:24px}
+.badge-count{
+  position:absolute;top:4px;left:4px;min-width:18px;height:18px;border-radius:9px;
+  background:var(--saffron);color:#1F2B27;font-size:11px;font-weight:800;line-height:18px;text-align:center;padding:0 4px;
+}
+.badge-count[data-n="0"]{display:none}
+
+/* ---------- announcement + header ---------- */
+.announce{background:var(--ink);color:var(--bg);font-size:12.5px;overflow:hidden}
+.announce .wrap{display:flex;gap:28px;white-space:nowrap;padding-block:7px;justify-content:center}
+.announce span:not(:first-child){display:none}
+@media (min-width:700px){ .announce span:not(:first-child){display:inline} }
+
+.header{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:40;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);
+  border-bottom:1px solid transparent;transition:border-color .2s;
+}
+.header.scrolled{border-bottom-color:var(--line)}
+.header .wrap{display:flex;align-items:center;gap:8px;min-height:60px}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;margin-inline-end:auto}
+.logo-mark{width:34px;height:34px}
+.logo-text{font-family:var(--f-display);font-size:30px;font-weight:700;line-height:1;letter-spacing:0}
+.logo-text b{color:var(--accent);font-weight:700}
+.nav-desktop{display:none;gap:4px;margin-inline-end:auto}
+.nav-desktop a{text-decoration:none;padding:8px 12px;border-radius:999px;font-weight:500;font-size:14.5px}
+.nav-desktop a:hover{background:var(--surface-2)}
+@media (min-width:900px){
+  .nav-desktop{display:flex}
+  .logo{margin-inline-end:24px}
+  .menu-btn{display:none}
+}
+
+/* ---------- search ---------- */
+.search-panel{border-top:1px solid var(--line);padding-block:12px}
+.search-field{
+  display:flex;align-items:center;gap:8px;background:var(--surface);border:1.5px solid var(--line);
+  border-radius:999px;padding:0 16px;min-height:48px;
+}
+.search-field input{flex:1;min-width:0;border:0;background:transparent;font:inherit;color:var(--ink);outline:none}
+.search-field svg{width:20px;height:20px;color:var(--muted)}
+
+/* ---------- hero ---------- */
+.hero{padding-block:20px 36px;position:relative}
+.hero-grid{display:grid;gap:8px;align-items:center}
+@media (min-width:900px){ .hero-grid{grid-template-columns:1.05fr 1fr;gap:40px} .hero{padding-block:48px 64px} }
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--accent);
+  background:var(--accent-soft);padding:4px 12px;border-radius:999px;
+}
+.hero h1{
+  font-family:var(--f-display);font-weight:700;font-size:clamp(40px,10.5vw,78px);line-height:1.05;margin-top:14px;
+}
+.hero h1 em{font-style:normal;color:var(--accent);position:relative;white-space:nowrap}
+.hero h1 em::after{
+  content:"";position:absolute;inset-inline:0;bottom:.02em;height:.16em;
+  background:repeating-linear-gradient(-60deg,var(--saffron) 0 3px,transparent 3px 7px);opacity:.75;border-radius:4px;
+}
+.hero-lead{color:var(--muted);font-size:16.5px;margin-top:14px;max-width:34em}
+.hero-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.hero-cta .btn{flex:1 1 auto;white-space:nowrap;padding:0 18px}
+@media (min-width:900px){ .hero-cta .btn{flex:0 0 auto} }
+
+.trust{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:22px}
+@media (min-width:600px){ .trust{grid-template-columns:repeat(4,minmax(0,1fr))} }
+.trust div{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--ink);min-width:0}
+.trust svg{width:22px;height:22px;flex:none;color:var(--accent)}
+
+.stage{
+  position:relative;aspect-ratio:4/4.4;max-width:100%;width:min(100%,520px);margin-inline:auto;order:-1;
+}
+@media (min-width:900px){ .stage{order:0} }
+.arch{
+  position:absolute;inset:4% 8% 0;
+  background:linear-gradient(180deg,var(--accent-soft),var(--surface-2));
+  border-radius:50% 50% var(--r-lg) var(--r-lg)/38% 38% var(--r-lg) var(--r-lg);
+  overflow:hidden;
+}
+.arch::before{ /* girih-like lattice inside the arch, faint */
+  content:"";position:absolute;inset:0;opacity:.35;
+  background:
+    repeating-linear-gradient(60deg,transparent 0 22px,color-mix(in srgb,var(--accent) 22%,transparent) 22px 23px),
+    repeating-linear-gradient(-60deg,transparent 0 22px,color-mix(in srgb,var(--accent) 22%,transparent) 22px 23px);
+  mask-image:linear-gradient(180deg,#000 0%,transparent 75%);
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,transparent 75%);
+}
+.stage canvas,.stage .fallback{position:absolute;inset:0;width:100%;height:100%}
+.stage .fallback{display:grid;place-items:center;padding:12%}
+.stage-tag{
+  position:absolute;bottom:14px;inset-inline-start:50%;transform:translateX(50%);
+  background:var(--surface);border-radius:999px;padding:6px 14px;font-size:12.5px;box-shadow:var(--shadow);
+  display:flex;gap:8px;align-items:center;white-space:nowrap;
+}
+.stage-tag b{color:var(--accent)}
+.hint{font-size:11.5px;color:var(--muted);text-align:center;margin-top:6px}
+
+/* ---------- sections ---------- */
+.section{padding-block:36px}
+@media (min-width:900px){ .section{padding-block:64px} }
+.sec-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:18px}
+.sec-head h2{font-family:var(--f-display);font-size:clamp(30px,7vw,46px);line-height:1.1;font-weight:700}
+.sec-head p{color:var(--muted);font-size:14px;margin-top:4px}
+.link-more{font-weight:700;color:var(--accent);text-decoration:none;font-size:14px;white-space:nowrap}
+
+/* ---------- categories (coverflow swipe row) ---------- */
+.cats{
+  display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding-block:8px 18px;margin-inline:calc(var(--gutter) * -1);padding-inline:var(--gutter);
+  perspective:900px;scrollbar-width:none;
+}
+.cats::-webkit-scrollbar{display:none}
+.cat{
+  flex:0 0 46%;max-width:220px;scroll-snap-align:center;text-decoration:none;
+  background:var(--surface);border-radius:var(--r-md);overflow:hidden;
+  transform-style:preserve-3d;transition:transform .12s linear;will-change:transform;
+  border:1px solid var(--line);
+}
+@media (min-width:700px){ .cat{flex-basis:30%} }
+@media (min-width:1100px){ .cat{flex-basis:calc((100% - 60px)/6)} }
+.cat .thumb{aspect-ratio:1/1;background:var(--surface-2)}
+.cat .thumb svg{width:100%;height:100%}
+.cat .cap{padding:10px 12px 12px}
+.cat .cap b{display:block;font-size:15px}
+.cat .cap small{color:var(--muted);font-size:12.5px}
+
+/* ---------- filter chips ---------- */
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-bottom:16px;
+  margin-inline:calc(var(--gutter) * -1);padding-inline:var(--gutter)}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;min-height:40px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line);
+  background:var(--surface);font-size:14px;font-weight:500;
+}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+
+/* ---------- product grid ---------- */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (min-width:700px){ .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px} }
+@media (min-width:1100px){ .grid{grid-template-columns:repeat(4,minmax(0,1fr))} }
+.card{
+  background:var(--surface);border-radius:var(--r-md);overflow:hidden;display:flex;flex-direction:column;min-width:0;
+  border:1px solid var(--line);transform-style:preserve-3d;transition:transform .25s ease,box-shadow .25s ease;
+}
+.card-media{
+  position:relative;border:0;padding:0;background:var(--surface-2);aspect-ratio:4/5;display:block;width:100%;
+}
+.card-media svg{width:100%;height:100%}
+.tag{
+  position:absolute;top:8px;inset-inline-start:8px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;
+  background:var(--surface);color:var(--ink);
+}
+.tag.ready{background:var(--accent);color:var(--accent-ink)}
+.tag.custom{background:var(--saffron-soft);color:var(--ink)}
+.tag.hot{background:var(--saffron);color:#1F2B27}
+.sample{
+  position:absolute;bottom:8px;inset-inline-end:8px;font-size:10.5px;padding:2px 8px;border-radius:999px;
+  background:rgba(31,43,39,.62);color:#fff;
+}
+.fav{
+  position:absolute;top:6px;inset-inline-end:6px;width:36px;height:36px;border-radius:50%;border:0;
+  background:var(--surface);display:grid;place-items:center;
+}
+.fav svg{width:18px;height:18px}
+.fav[aria-pressed="true"] svg{fill:var(--danger);stroke:var(--danger)}
+.card-body{padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px;flex:1}
+.card-title{font-size:14px;font-weight:700;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:3.2em}
+.card-meta{font-size:12px;color:var(--muted)}
+.card-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:6px}
+.price{font-weight:800;font-size:15.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.price small{font-weight:500;font-size:11.5px;color:var(--muted);margin-inline-start:2px}
+.add{
+  width:40px;height:40px;border-radius:12px;border:0;background:var(--accent);color:var(--accent-ink);
+  display:grid;place-items:center;flex:none;
+}
+.add svg{width:20px;height:20px}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:32px 0}
+
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+  .card:hover{box-shadow:var(--shadow)}
+}
+
+/* ---------- process: scroll-driven 3D prism ---------- */
+.process{background:var(--ink);color:var(--bg)}
+.process .sec-head p{color:color-mix(in srgb,var(--bg) 70%,transparent)}
+.process-grid{display:grid;gap:28px;align-items:center}
+@media (min-width:900px){ .process-grid{grid-template-columns:1fr 1fr;gap:56px} }
+.prism-wrap{perspective:1000px;display:grid;place-items:center;padding-block:28px}
+.prism{width:200px;height:240px;position:relative;transform-style:preserve-3d;transition:transform .1s linear}
+@media (min-width:900px){ .prism{width:250px;height:300px} }
+.face{
+  position:absolute;inset:0;border-radius:var(--r-md);overflow:hidden;backface-visibility:hidden;
+  background:var(--surface);color:var(--ink);display:flex;flex-direction:column;
+  box-shadow:0 20px 40px rgba(0,0,0,.25);
+}
+.face svg{flex:1;width:100%}
+.face span{font-size:13px;font-weight:700;padding:8px 12px;border-top:1px solid var(--line)}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.steps li{
+  display:grid;grid-template-columns:auto 1fr;gap:14px;padding:14px;border-radius:var(--r-md);
+  border:1px solid color-mix(in srgb,var(--bg) 18%,transparent);transition:background .3s,border-color .3s;
+}
+.steps li.on{background:color-mix(in srgb,var(--bg) 8%,transparent);border-color:var(--accent)}
+.steps .n{
+  width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:800;
+  background:color-mix(in srgb,var(--bg) 12%,transparent);font-variant-numeric:tabular-nums;
+}
+.steps li.on .n{background:var(--accent);color:var(--accent-ink)}
+.steps b{display:block;font-size:16px}
+.steps p{font-size:14px;color:color-mix(in srgb,var(--bg) 72%,transparent)}
+
+/* ---------- custom order builder ---------- */
+.builder{
+  background:var(--surface);border-radius:var(--r-lg);border:1px solid var(--line);
+  display:grid;gap:0;overflow:hidden;
+}
+@media (min-width:900px){ .builder{grid-template-columns:1fr 1.1fr} }
+.builder-preview{background:var(--surface-2);display:grid;place-items:center;padding:20px;position:relative;min-height:300px}
+.builder-preview svg{width:min(100%,300px);height:auto;transition:transform .3s ease}
+.builder-preview .ruler{
+  position:absolute;bottom:14px;inset-inline:20px;display:flex;justify-content:space-between;font-size:11px;color:var(--muted);
+  border-top:1.5px dashed var(--muted);padding-top:2px;font-variant-numeric:tabular-nums;
+}
+.builder-form{padding:20px;display:grid;gap:18px}
+@media (min-width:700px){ .builder-form{padding:28px} }
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend,.lbl{font-weight:700;font-size:14px;margin-bottom:8px;padding:0}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{
+  min-height:42px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line);display:inline-flex;align-items:center;
+  font-size:14px;cursor:pointer;background:var(--bg);
+}
+.seg input:checked+label{border-color:var(--accent);background:var(--accent-soft);font-weight:700}
+.seg input:focus-visible+label{outline:3px solid var(--accent);outline-offset:2px}
+.swatches{display:flex;flex-wrap:wrap;gap:10px}
+.swatches input{position:absolute;opacity:0;pointer-events:none}
+.swatches label{
+  width:40px;height:40px;border-radius:50%;cursor:pointer;border:2px solid var(--line);position:relative;
+  background:var(--sw);
+}
+.swatches input:checked+label{box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--accent)}
+.swatches input:focus-visible+label{outline:3px solid var(--accent);outline-offset:4px}
+.range-row{display:flex;align-items:center;gap:12px}
+.range-row input{flex:1;accent-color:var(--accent)}
+.range-row output{font-weight:800;min-width:72px;text-align:left;font-variant-numeric:tabular-nums}
+.field{display:grid;gap:6px}
+.field input,.field textarea{
+  font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:var(--r-sm);
+  padding:10px 12px;min-height:46px;width:100%;
+}
+.field input:focus,.field textarea:focus{border-color:var(--accent);outline:none}
+.two{display:grid;gap:12px}
+@media (min-width:600px){ .two{grid-template-columns:1fr 1fr} }
+.estimate{
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--saffron-soft);
+  border-radius:var(--r-sm);padding:12px 14px;font-size:14px;
+}
+.estimate b{font-variant-numeric:tabular-nums}
+.form-ok{background:var(--accent-soft);border-radius:var(--r-sm);padding:12px 14px;font-size:14px}
+
+/* ---------- gift band ---------- */
+.gifts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (min-width:900px){ .gifts{grid-template-columns:repeat(4,minmax(0,1fr))} }
+.gift{
+  border-radius:var(--r-md);padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:2px;min-height:118px;
+  background:var(--surface);border:1px solid var(--line);
+}
+.gift b{font-family:var(--f-display);font-size:24px;line-height:1.15}
+@media (min-width:700px){ .gift b{font-size:30px} }
+.gift span{font-size:13px;color:var(--muted)}
+.gift.hl{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.gift.hl span{color:inherit;opacity:.85}
+
+/* ---------- maker ---------- */
+.maker{display:grid;gap:22px;align-items:center}
+@media (min-width:900px){ .maker{grid-template-columns:.9fr 1.1fr;gap:56px} }
+.maker-photo{border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/4.4;position:relative;background:var(--surface-2)}
+.maker-photo svg{width:100%;height:100%}
+.maker blockquote{margin:0;font-family:var(--f-display);font-size:clamp(26px,6vw,38px);line-height:1.35}
+.maker p{color:var(--muted);margin-top:12px}
+.sign{margin-top:14px;font-weight:700}
+.facts{display:flex;gap:22px;flex-wrap:wrap;margin-top:18px}
+.facts div{min-width:0}
+.facts b{display:block;font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}
+.facts span{font-size:12.5px;color:var(--muted)}
+
+/* ---------- reviews ---------- */
+.reviews{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;
+  margin-inline:calc(var(--gutter) * -1);padding-inline:var(--gutter);padding-bottom:4px}
+.reviews::-webkit-scrollbar{display:none}
+.review{
+  flex:0 0 84%;max-width:360px;scroll-snap-align:center;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-md);padding:16px;display:flex;flex-direction:column;gap:8px;
+}
+@media (min-width:900px){ .review{flex-basis:calc((100% - 24px)/3)} }
+.stars{color:var(--saffron);letter-spacing:2px;font-size:15px}
+.review p{font-size:14.5px}
+.review footer{font-size:12.5px;color:var(--muted);margin-top:auto}
+.note{font-size:12px;color:var(--muted);margin-top:8px}
+
+/* ---------- FAQ ---------- */
+.faq{display:grid;gap:10px;max-width:820px}
+.faq details{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:0 16px}
+.faq summary{
+  list-style:none;cursor:pointer;min-height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  font-weight:700;font-size:15px;
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:22px;color:var(--accent);transition:transform .2s;flex:none}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding-bottom:16px;color:var(--muted);font-size:14.5px}
+
+/* ---------- footer ---------- */
+.footer{background:var(--surface);border-top:1px solid var(--line);padding-block:36px 28px;margin-top:24px}
+.foot-grid{display:grid;gap:26px}
+@media (min-width:900px){ .foot-grid{grid-template-columns:1.4fr 1fr 1fr 1.2fr} }
+.footer h3{font-size:15px;margin-bottom:10px}
+.footer ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.footer a{text-decoration:none;color:var(--muted);font-size:14px}
+.footer a:hover{color:var(--ink)}
+.footer p{color:var(--muted);font-size:14px}
+.badges{display:flex;gap:10px;margin-top:12px}
+.badges div{
+  width:84px;height:84px;border:1.5px dashed var(--line);border-radius:var(--r-sm);display:grid;place-items:center;
+  font-size:11px;color:var(--muted);text-align:center;padding:6px;line-height:1.5;
+}
+.newsletter{display:flex;gap:8px;margin-top:10px}
+.newsletter input{flex:1;min-width:0;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:999px;padding:0 16px;min-height:46px}
+.copy{border-top:1px solid var(--line);margin-top:26px;padding-top:16px;font-size:12.5px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ltr{direction:ltr;unicode-bidi:isolate;display:inline-block}
+
+/* ---------- bottom nav (phones) ---------- */
+.bottom-nav{
+  position:fixed;bottom:0;inset-inline:0;z-index:45;background:var(--surface);border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.bottom-nav ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);height:var(--nav-h)}
+.bottom-nav a,.bottom-nav button{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:100%;width:100%;
+  border:0;background:transparent;text-decoration:none;font-size:11px;color:var(--muted);position:relative;
+}
+.bottom-nav .active{color:var(--accent);font-weight:700}
+.bottom-nav svg{width:22px;height:22px}
+.bottom-nav .badge-count{top:6px;left:calc(50% - 22px)}
+@media (min-width:900px){ .bottom-nav{display:none} }
+
+/* ---------- overlays: sheet, drawer, toast ---------- */
+.scrim{position:fixed;inset:0;background:rgba(10,16,14,.5);z-index:60;opacity:0;transition:opacity .25s}
+.scrim.show{opacity:1}
+.sheet{
+  position:fixed;z-index:61;inset-inline:0;bottom:0;max-height:92vh;overflow:auto;background:var(--surface);
+  border-radius:var(--r-lg) var(--r-lg) 0 0;transform:translateY(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.sheet.show{transform:none}
+.sheet-grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:10px auto 4px}
+.sheet-close{position:absolute;top:8px;inset-inline-end:8px;z-index:2;background:var(--surface)}
+@media (min-width:900px){
+  .sheet{
+    inset:auto;top:50%;left:50%;width:min(940px,92vw);max-height:88vh;border-radius:var(--r-lg);
+    transform:translate(-50%,-46%) scale(.98);opacity:0;transition:transform .25s,opacity .25s;
+  }
+  .sheet.show{transform:translate(-50%,-50%);opacity:1}
+  .sheet-grab{display:none}
+}
+.pd{display:grid;gap:0}
+@media (min-width:900px){ .pd{grid-template-columns:1fr 1fr} }
+.pd-gallery{background:var(--surface-2);position:relative}
+.pd-main{aspect-ratio:4/4.2;max-height:52vh;margin-inline:auto}
+@media (min-width:900px){ .pd-main{max-height:none;height:100%} }
+.pd-main svg{width:100%;height:100%}
+.pd-thumbs{display:flex;gap:8px;padding:10px 16px;overflow-x:auto}
+.pd-thumbs button{flex:none;width:56px;height:56px;border-radius:10px;overflow:hidden;border:2px solid transparent;padding:0;background:var(--surface)}
+.pd-thumbs button[aria-pressed="true"]{border-color:var(--accent)}
+.pd-thumbs svg{width:100%;height:100%}
+.pd-info{padding:16px 16px 20px;display:grid;gap:14px;align-content:start}
+@media (min-width:900px){ .pd-info{padding:28px} }
+.crumbs{font-size:12px;color:var(--muted)}
+.pd-info h2{font-size:20px;line-height:1.6}
+.pd-price{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.pd-price .price{font-size:22px}
+.lead{font-size:13px;color:var(--muted)}
+.qty{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:999px;height:48px}
+.qty button{width:44px;height:100%;border:0;background:transparent;font-size:20px}
+.qty output{min-width:28px;text-align:center;font-weight:800;font-variant-numeric:tabular-nums}
+.buy-row{display:flex;gap:10px}
+.buy-row .btn{flex:1}
+.specs{width:100%;border-collapse:collapse;font-size:13.5px}
+.specs th,.specs td{padding:8px 0;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}
+.specs th{color:var(--muted);font-weight:500;width:38%}
+.ship-note{display:flex;gap:10px;align-items:flex-start;background:var(--bg);border-radius:var(--r-sm);padding:10px 12px;font-size:13px}
+.ship-note svg{width:20px;height:20px;flex:none;color:var(--accent);margin-top:2px}
+
+.drawer{
+  position:fixed;z-index:61;top:0;bottom:0;left:0;width:min(400px,88vw);background:var(--surface);
+  transform:translateX(-100%);transition:transform .3s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.drawer.show{transform:none}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)}
+.drawer-head h2{font-size:18px}
+.drawer-items{flex:1;overflow:auto;padding:8px 16px;display:grid;gap:12px;align-content:start}
+.line{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center}
+.line .th{width:64px;height:76px;border-radius:10px;overflow:hidden;background:var(--surface-2)}
+.line .th svg{width:100%;height:100%}
+.line b{font-size:13.5px;display:block;line-height:1.6}
+.line small{color:var(--muted);font-variant-numeric:tabular-nums}
+.line .rm{border:0;background:transparent;color:var(--muted);font-size:12.5px;text-decoration:underline}
+.drawer-foot{border-top:1px solid var(--line);padding:14px 16px;display:grid;gap:10px}
+.sum{display:flex;justify-content:space-between;font-size:14px}
+.sum b{font-variant-numeric:tabular-nums}
+.free-ship{height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden}
+.free-ship i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+
+.toast{
+  position:fixed;z-index:70;left:50%;bottom:calc(var(--nav-h) + 16px + env(safe-area-inset-bottom,0px));
+  transform:translate(-50%,20px);opacity:0;pointer-events:none;
+  background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:14px;font-weight:500;
+  transition:transform .25s,opacity .25s;white-space:nowrap;box-shadow:var(--shadow);
+}
+.toast.show{transform:translate(-50%,0);opacity:1}
+@media (min-width:900px){ .toast{bottom:24px} }
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<div class="announce" role="note">
+  <div class="wrap">
+    <span>ارسال به سراسر ایران · بسته‌بندی هدیه رایگان</span>
+    <span>سفارش با رنگ و اندازه‌ی دلخواه</span>
+    <span>ارسال رایگان برای خرید بالای ۱٬۵۰۰٬۰۰۰ تومان</span>
+  </div>
+</div>
+
+<header class="header" id="top">
+  <div class="wrap">
+    <button class="icon-btn menu-btn" aria-label="منو" id="menuBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+    </button>
+    <a class="logo" href="#top" aria-label="مکرومینو، صفحه اصلی">
+      <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="9" r="5.5" fill="none" stroke="var(--accent)" stroke-width="2.4"/>
+        <path d="M14 15c0 8 12 8 12 16M26 15c0 8-12 8-12 16" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M17 33l-1 5M20 33v5M23 33l1 5" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <span class="logo-text">مکرو<b>مینو</b></span>
+    </a>
+    <nav class="nav-desktop" aria-label="منوی اصلی">
+      <a href="#categories">دسته‌بندی‌ها</a>
+      <a href="#products">پرفروش‌ها</a>
+      <a href="#custom">سفارش سفارشی</a>
+      <a href="#gifts">ایده هدیه</a>
+      <a href="#faq">سؤالات</a>
+    </nav>
+    <button class="icon-btn" aria-label="جست‌وجو" id="searchBtn" aria-expanded="false" aria-controls="searchPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    </button>
+    <button class="icon-btn" aria-label="سبد خرید" data-open-cart>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+      <span class="badge-count" data-cart-count data-n="0">۰</span>
+    </button>
+  </div>
+  <div class="search-panel" id="searchPanel" hidden>
+    <div class="wrap">
+      <label class="search-field" for="q">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <span class="sr-only">جست‌وجوی محصول</span>
+        <input id="q" type="search" placeholder="مثلاً آینه مکرومه یا آویز گلدان" autocomplete="off">
+      </label>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">دست‌بافت، گره به گره</span>
+        <h1>مکرومه‌ای که <em>گرمای دست</em> را به خانه می‌آورد</h1>
+        <p class="hero-lead">دیوارکوب، آویز گلدان، آینه و کیف مکرومه با نخ پنبه‌ای مرغوب. آماده‌ی ارسال، یا بافته‌شده با رنگ و اندازه‌ای که شما انتخاب می‌کنید.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#products">مشاهده محصولات</a>
+          <a class="btn btn-ghost" href="#custom">سفارش با طرح دلخواه</a>
+        </div>
+        <div class="trust">
+          <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11V6a2 2 0 0 1 4 0v4M11 9V4.5a2 2 0 0 1 4 0V10M15 9a2 2 0 0 1 4 0v5a7 7 0 0 1-7 7h-1a6 6 0 0 1-5-2.7L3.5 14a2 2 0 0 1 3.2-2.4L7 12"/></svg>صد درصد دست‌بافت</div>
+          <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>ارسال به همه شهرها</div>
+          <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/></svg>۷ روز ضمانت بازگشت</div>
+          <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>پرداخت امن</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="stage" id="stage">
+          <div class="arch" aria-hidden="true"></div>
+          <canvas id="hero3d" aria-label="مدل سه‌بعدی آویز گلدان مکرومه که با اسکرول می‌چرخد" role="img"></canvas>
+          <div class="fallback" id="heroFallback" hidden></div>
+          <div class="stage-tag">آویز گلدان «نیلوفر» <b>۳۴۰٬۰۰۰ تومان</b></div>
+        </div>
+        <p class="hint">مدل سه‌بعدی نمونه؛ با اسکرول یا کشیدن انگشت می‌چرخد</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="section" id="categories" style="padding-top:8px">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <h2>چه چیزی می‌خواهید؟</h2>
+          <p>برای دیدن همه، به چپ بکشید</p>
+        </div>
+      </div>
+      <div class="cats" id="cats"></div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section class="section" id="products" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <h2>پرفروش‌های این ماه</h2>
+          <p>قیمت‌ها و عکس‌ها نمونه‌اند</p>
+        </div>
+        <a class="link-more" href="#products">همه محصولات ←</a>
+      </div>
+      <div class="chips" role="group" aria-label="فیلتر محصولات" id="chips"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <!-- PROCESS (3D, scroll-driven) -->
+  <section class="section process" id="process">
+    <div class="wrap process-grid">
+      <div class="prism-wrap" aria-hidden="true">
+        <div class="prism" id="prism"></div>
+      </div>
+      <div>
+        <div class="sec-head">
+          <div>
+            <h2>از کلاف تا دیوار خانه‌ی شما</h2>
+            <p>هر سفارش همین سه مرحله را طی می‌کند</p>
+          </div>
+        </div>
+        <ol class="steps" id="steps">
+          <li class="on"><span class="n">۱</span><div><b>انتخاب نخ و رنگ</b><p>نخ پنبه‌ای نرم‌تاب ۳ تا ۵ میل، به رنگی که شما انتخاب کرده‌اید.</p></div></li>
+          <li><span class="n">۲</span><div><b>بافت با دست</b><p>بسته به اندازه، بین ۳ ساعت تا ۳ روز. از مراحل بافت برایتان عکس می‌فرستیم.</p></div></li>
+          <li><span class="n">۳</span><div><b>بسته‌بندی و ارسال</b><p>بسته‌بندی محکم و هدیه‌ای، ارسال با پست یا تیپاکس و کد رهگیری.</p></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- CUSTOM ORDER -->
+  <section class="section" id="custom">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <h2>طرح خودتان را بسازید</h2>
+          <p>نوع، رنگ و اندازه را انتخاب کنید؛ قیمت تقریبی همین‌جا حساب می‌شود</p>
+        </div>
+      </div>
+      <div class="builder">
+        <div class="builder-preview" aria-live="polite">
+          <div id="builderSvg"></div>
+          <div class="ruler" aria-hidden="true"><span>۰</span><span id="rulerMax">۶۰ سانتی‌متر</span></div>
+        </div>
+        <form class="builder-form" id="builderForm" novalidate>
+          <fieldset>
+            <legend>نوع محصول</legend>
+            <div class="seg" id="typeSeg"></div>
+          </fieldset>
+          <fieldset>
+            <legend>رنگ نخ: <span id="colorName">کرم</span></legend>
+            <div class="swatches" id="swatches"></div>
+          </fieldset>
+          <div>
+            <label class="lbl" for="width">عرض</label>
+            <div class="range-row">
+              <input type="range" id="width" min="30" max="120" step="5" value="60">
+              <output for="width" id="widthOut">۶۰ سانتی‌متر</output>
+            </div>
+          </div>
+          <div class="estimate">
+            <span>قیمت تقریبی: <b id="estPrice">—</b></span>
+            <span>زمان آماده‌سازی: <b id="estDays">—</b></span>
+          </div>
+          <div class="two">
+            <div class="field"><label for="cname">نام</label><input id="cname" autocomplete="name" placeholder="مثلاً مریم"></div>
+            <div class="field"><label for="cphone">شماره موبایل</label><input id="cphone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="۰۹۱۲۱۲۳۴۵۶۷"></div>
+          </div>
+          <div class="field"><label for="cnote">توضیحات (اختیاری)</label><textarea id="cnote" rows="2" placeholder="مثلاً برای بالای تخت، با مهره‌ی چوبی"></textarea></div>
+          <button class="btn btn-primary btn-block" type="submit">ثبت درخواست سفارش</button>
+          <p class="form-ok" id="formOk" hidden></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- GIFTS -->
+  <section class="section" id="gifts" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <h2>هدیه‌ی دست‌ساز، برای هر بودجه</h2>
+          <p>با بسته‌بندی کادویی و کارت دست‌نویس</p>
+        </div>
+      </div>
+      <div class="gifts">
+        <a class="gift" href="#products" data-budget="200000"><b>زیر ۲۰۰ هزار</b><span>جاکلیدی، ست زیرلیوانی</span></a>
+        <a class="gift" href="#products" data-budget="500000"><b>زیر ۵۰۰ هزار</b><span>آینه، آویز گلدان</span></a>
+        <a class="gift" href="#products" data-budget="1000000"><b>زیر ۱ میلیون</b><span>دیوارکوب، کوسن</span></a>
+        <a class="gift hl" href="#custom"><b>هدیه‌ی سفارشی</b><span>با اسم یا رنگ دلخواه</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAKER -->
+  <section class="section" id="about">
+    <div class="wrap maker">
+      <div class="maker-photo" id="makerPhoto"></div>
+      <div>
+        <blockquote>«هر کار را از اول تا آخر خودم می‌بافم. برای همین هیچ دو تایی دقیقاً شبیه هم نیستند.»</blockquote>
+        <p>مکرومینو یک کارگاه کوچک خانگی است. هر محصول با نخ پنبه‌ای ایرانی و چوب طبیعی بافته می‌شود و قبل از ارسال، تک‌تک گره‌ها بازبینی می‌شوند.</p>
+        <p class="sign">بافنده‌ی مکرومینو</p>
+        <div class="facts">
+          <div><b>+۳۰۰</b><span>سفارش ارسال‌شده</span></div>
+          <div><b>۴٫۹ از ۵</b><span>رضایت خریداران</span></div>
+          <div><b>۲۸</b><span>رنگ نخ</span></div>
+        </div>
+        <p class="note">اعداد نمونه‌اند و با آمار واقعی جایگزین می‌شوند.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><div><h2>خریداران چه گفته‌اند</h2></div></div>
+      <div class="reviews">
+        <article class="review"><div class="stars" aria-label="۵ ستاره">★★★★★</div><p>آینه رو برای اتاق دخترم گرفتم، از عکسش هم قشنگ‌تره. بسته‌بندی خیلی تمیز بود.</p><footer>سارا، تهران · آینه خورشیدی</footer></article>
+        <article class="review"><div class="stars" aria-label="۵ ستاره">★★★★★</div><p>رنگ دیوارکوب رو خودم انتخاب کردم و دقیقاً همون شد. سه روزه رسید شیراز.</p><footer>نگار، شیراز · دیوارکوب سفارشی</footer></article>
+        <article class="review"><div class="stars" aria-label="۴ ستاره">★★★★☆</div><p>آویز گلدان محکمه و گلدون سنگین رو راحت نگه می‌داره. فقط کاش رنگ سبزش هم بود.</p><footer>امیر، اصفهان · آویز گلدان</footer></article>
+      </div>
+      <p class="note">نظرات نمونه‌اند و در نسخه‌ی نهایی از خریداران واقعی نمایش داده می‌شوند.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><div><h2>سؤالات پرتکرار</h2></div></div>
+      <div class="faq">
+        <details><summary>سفارش سفارشی چند روز طول می‌کشد؟</summary><p>محصولات کوچک ۲ تا ۴ روز کاری و دیوارکوب یا پرده‌ی بزرگ ۷ تا ۱۴ روز کاری. زمان دقیق موقع ثبت سفارش اعلام می‌شود.</p></details>
+        <details><summary>قیمت مکرومه به چه چیزی بستگی دارد؟</summary><p>به اندازه، تعداد گره‌ها و نوع نخ. بیشتر هزینه‌ی هر محصول، زمان بافت آن است.</p></details>
+        <details><summary>مکرومه را چطور بشوییم؟</summary><p>برای گردگیری از برس نرم یا سشوار با باد سرد استفاده کنید. در صورت نیاز با آب سرد و شوینده‌ی ملایم، دستی بشویید و روی سطح صاف خشک کنید.</p></details>
+        <details><summary>اگر محصول با عکس فرق داشت چه کنم؟</summary><p>تا ۷ روز بعد از تحویل می‌توانید محصولات آماده را مرجوع کنید. محصولات سفارشی قبل از ارسال با عکس برای تأیید شما فرستاده می‌شوند.</p></details>
+        <details><summary>ارسال با چه روشی است؟</summary><p>پست پیشتاز به همه‌ی شهرها و تیپاکس برای ارسال سریع‌تر. کد رهگیری بعد از ارسال پیامک می‌شود.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="logo" href="#top" style="margin-bottom:10px"><span class="logo-text">مکرو<b>مینو</b></span></a>
+        <p>فروشگاه محصولات مکرومه‌ی دست‌بافت: دیوارکوب، آویز گلدان، آینه، کیف و هدیه‌های دست‌ساز.</p>
+        <div class="badges">
+          <div>جای نماد اعتماد الکترونیکی</div>
+          <div>جای نشان درگاه پرداخت</div>
+        </div>
+      </div>
+      <div>
+        <h3>دسته‌بندی‌ها</h3>
+        <ul>
+          <li><a href="#categories">دیوارکوب مکرومه</a></li>
+          <li><a href="#categories">آویز گلدان مکرومه</a></li>
+          <li><a href="#categories">آینه مکرومه</a></li>
+          <li><a href="#categories">کیف مکرومه</a></li>
+          <li><a href="#categories">زیرلیوانی و اکسسوری</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>راهنمای خرید</h3>
+        <ul>
+          <li><a href="#custom">سفارش با طرح دلخواه</a></li>
+          <li><a href="#faq">ارسال و مرجوعی</a></li>
+          <li><a href="#faq">نگهداری و شستشو</a></li>
+          <li><a href="#about">درباره ما</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>در تماس باشیم</h3>
+        <p>پاسخگویی شنبه تا پنجشنبه، ۱۰ تا ۱۹</p>
+        <p>تلفن: <span class="ltr">0912 000 0000</span></p>
+        <p>اینستاگرام: <span class="ltr">@makromino</span></p>
+        <form class="newsletter" id="newsForm">
+          <label class="sr-only" for="newsPhone">شماره موبایل برای خبرنامه</label>
+          <input id="newsPhone" type="tel" inputmode="numeric" placeholder="شماره موبایل برای تخفیف‌ها">
+          <button class="btn btn-primary" type="submit" style="padding:0 16px">عضویت</button>
+        </form>
+      </div>
+    </div>
+    <div class="copy">
+      <span>© ۱۴۰۵ مکرومینو. همه‌ی حقوق محفوظ است.</span>
+      <span>قالب نمایشی؛ عکس‌ها، قیمت‌ها و نظرات نمونه‌اند.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- bottom nav (phones) -->
+<nav class="bottom-nav" aria-label="ناوبری پایین">
+  <ul>
+    <li><a href="#top" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg>خانه</a></li>
+    <li><a href="#categories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>دسته‌ها</a></li>
+    <li><a href="#custom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M7 8c0 4 10 4 10 8M17 8c0 4-10 4-10 8"/></svg>سفارشی</a></li>
+    <li><button type="button" data-open-cart><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>سبد<span class="badge-count" data-cart-count data-n="0">۰</span></button></li>
+    <li><a href="#faq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>حساب</a></li>
+  </ul>
+</nav>
+
+<!-- overlays -->
+<div class="scrim" id="scrim" hidden></div>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="pdTitle" hidden>
+  <div class="sheet-grab" aria-hidden="true"></div>
+  <button class="icon-btn sheet-close" id="sheetClose" aria-label="بستن">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <div class="pd">
+    <div class="pd-gallery">
+      <div class="pd-main" id="pdMain"></div>
+      <div class="pd-thumbs" id="pdThumbs"></div>
+    </div>
+    <div class="pd-info">
+      <div class="crumbs" id="pdCrumbs"></div>
+      <h2 id="pdTitle"></h2>
+      <div class="pd-price"><span class="price" id="pdPrice"></span><span class="lead" id="pdLead"></span></div>
+      <fieldset>
+        <legend>رنگ: <span id="pdColorName"></span></legend>
+        <div class="swatches" id="pdSwatches"></div>
+      </fieldset>
+      <fieldset>
+        <legend>اندازه</legend>
+        <div class="seg" id="pdSizes"></div>
+      </fieldset>
+      <div class="buy-row">
+        <div class="qty" role="group" aria-label="تعداد">
+          <button type="button" id="qtyPlus" aria-label="افزایش">+</button>
+          <output id="qty">۱</output>
+          <button type="button" id="qtyMinus" aria-label="کاهش">−</button>
+        </div>
+        <button class="btn btn-primary" id="pdAdd" type="button">افزودن به سبد</button>
+      </div>
+      <div class="ship-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>
+        <span id="pdShip"></span>
+      </div>
+      <table class="specs" id="pdSpecs"></table>
+      <p class="lead" id="pdDesc"></p>
+    </div>
+  </div>
+</div>
+
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle" hidden>
+  <div class="drawer-head">
+    <h2 id="cartTitle">سبد خرید</h2>
+    <button class="icon-btn" id="drawerClose" aria-label="بستن سبد">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="drawer-items" id="cartItems"></div>
+  <div class="drawer-foot">
+    <div class="sum"><span id="freeShipText"></span></div>
+    <div class="free-ship"><i id="freeShipBar"></i></div>
+    <div class="sum"><span>جمع کل</span><b id="cartTotal">۰ تومان</b></div>
+    <button class="btn btn-primary btn-block" id="checkout" type="button">ادامه و پرداخت</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+"use strict";
+
+/* ================= helpers ================= */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const fa = n => Number(n).toLocaleString("fa-IR");
+const toman = n => `${fa(n)} <small>تومان</small>`;
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+/* ================= palette for placeholder art ================= */
+const COLORS = {
+  cream:  { name: "کرم",        rope: "#E8DCC3" },
+  white:  { name: "سفید",       rope: "#F5F2EA" },
+  grey:   { name: "طوسی",       rope: "#B8B8B0" },
+  olive:  { name: "سبز زیتونی", rope: "#8D9566" },
+  rose:   { name: "صورتی خاکی", rope: "#D6A497" },
+  mustard:{ name: "خردلی",      rope: "#D4A23F" },
+};
+const BG = ["#E6E9E1", "#E9E4DA", "#DFE7E4", "#ECE2DD", "#E4E6EC", "#E9E6D8"];
+const WOOD = "#A97C4F", WOOD_D = "#7E5A36";
+const shade = (hex, f) => {
+  const n = parseInt(hex.slice(1), 16);
+  let r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+  r = clamp(Math.round(r * f), 0, 255); g = clamp(Math.round(g * f), 0, 255); b = clamp(Math.round(b * f), 0, 255);
+  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+};
+
+/* ================= placeholder illustrations (SVG) =================
+   Stand-ins for product photos. Each takes a rope colour and a background. */
+const svgOpen = (bg, vb = "0 0 200 250") =>
+  `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="100%" height="100%" fill="${bg}"/>`;
+
+const ART = {
+  wall(rope, bg, w = 1) {
+    const d = shade(rope, .78), n = 14, x0 = 100 - 52 * w, x1 = 100 + 52 * w, step = (x1 - x0) / (n - 1);
+    let s = svgOpen(bg) + `<path d="M${x0 + 8} 34 L100 14 L${x1 - 8} 34" stroke="${d}" stroke-width="1.5" fill="none"/>`;
+    s += `<rect x="${x0 - 12}" y="31" width="${x1 - x0 + 24}" height="8" rx="4" fill="${WOOD}"/>`;
+    for (let i = 0; i < n; i++) {
+      const x = x0 + i * step, dist = Math.abs(x - 100) / (52 * w);
+      const end = 222 - dist * 62;
+      s += `<path d="M${x} 39 L${x} ${end}" stroke="${rope}" stroke-width="${3.4 * Math.min(1, w + .2)}" stroke-linecap="round"/>`;
+    }
+    for (let r = 0; r < 7; r++) {
+      const y = 52 + r * 12, half = r < 4 ? r : 6 - r;
+      for (let k = -half; k <= half; k += 1) {
+        if ((k + half) % 2) continue;
+        const x = 100 + k * step * 1.0;
+        s += `<ellipse cx="${x}" cy="${y}" rx="${step * .75}" ry="5" fill="${rope}" stroke="${d}" stroke-width="1"/>`;
+      }
+    }
+    s += `<path d="M${x0} 150 Q100 ${178} ${x1} 150" stroke="${d}" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+    s += `<path d="M${x0} 150 Q100 ${178} ${x1} 150" stroke="${rope}" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="3 3"/>`;
+    return s + `</svg>`;
+  },
+  plant(rope, bg, pot = "#1C8C84") {
+    const d = shade(rope, .78);
+    let s = svgOpen(bg) + `<circle cx="100" cy="22" r="10" fill="none" stroke="${WOOD}" stroke-width="4"/>`;
+    s += `<rect x="94" y="32" width="12" height="14" rx="4" fill="${rope}" stroke="${d}"/>`;
+    const tops = [[88, 46], [96, 46], [104, 46], [112, 46]];
+    const mids = [[52, 120], [80, 122], [120, 122], [148, 120]];
+    tops.forEach(([x, y], i) => {
+      const [mx, my] = mids[i];
+      s += `<path d="M${x} ${y} Q${(x + mx) / 2} ${(y + my) / 2 - 6} ${mx} ${my}" stroke="${rope}" stroke-width="3" fill="none"/>`;
+      for (let k = 1; k <= 3; k++) {
+        const t = .35 + k * .12, px = x + (mx - x) * t, py = y + (my - y) * t;
+        s += `<ellipse cx="${px}" cy="${py}" rx="4.5" ry="3.5" fill="${rope}" stroke="${d}"/>`;
+      }
+    });
+    s += `<path d="M58 140 Q100 132 142 140 L134 198 Q100 208 66 198 Z" fill="${pot}"/>`;
+    s += `<path d="M58 140 Q100 132 142 140" stroke="${shade(pot, 1.25)}" stroke-width="5" fill="none"/>`;
+    const leaf = "#4E7C4B";
+    [[-26, -38, -30], [-8, -48, -8], [12, -44, 14], [28, -34, 34], [-34, -16, -60], [36, -14, 58]].forEach(([dx, dy, rot]) =>
+      s += `<ellipse cx="${100 + dx}" cy="${136 + dy}" rx="9" ry="20" fill="${leaf}" transform="rotate(${rot} ${100 + dx} ${136 + dy})"/>`);
+    s += `<path d="M52 120 L66 198 Q100 228 100 214 M148 120 L134 198 Q100 228 100 214" stroke="${rope}" stroke-width="3" fill="none"/>`;
+    s += `<rect x="93" y="210" width="14" height="10" rx="4" fill="${rope}" stroke="${d}"/>`;
+    for (let i = -4; i <= 4; i++) s += `<path d="M100 220 L${100 + i * 3.4} 246" stroke="${rope}" stroke-width="2.2" stroke-linecap="round"/>`;
+    return s + `</svg>`;
+  },
+  mirror(rope, bg) {
+    const d = shade(rope, .78), cx = 100, cy = 120;
+    let s = svgOpen(bg) + `<defs><linearGradient id="mg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3F6F7"/><stop offset=".55" stop-color="#C9D3D6"/><stop offset="1" stop-color="#E7ECEE"/></linearGradient></defs>`;
+    for (let i = 0; i < 48; i++) {
+      const a = i / 48 * Math.PI * 2, r1 = 44, r2 = i % 2 ? 78 : 88;
+      s += `<path d="M${cx + Math.cos(a) * r1} ${cy + Math.sin(a) * r1} L${cx + Math.cos(a) * r2} ${cy + Math.sin(a) * r2}" stroke="${rope}" stroke-width="3.2" stroke-linecap="round"/>`;
+    }
+    for (let i = 0; i < 24; i++) {
+      const a = (i + .5) / 24 * Math.PI * 2;
+      s += `<circle cx="${cx + Math.cos(a) * 58}" cy="${cy + Math.sin(a) * 58}" r="4.2" fill="${rope}" stroke="${d}"/>`;
+    }
+    s += `<circle cx="${cx}" cy="${cy}" r="46" fill="${rope}"/><circle cx="${cx}" cy="${cy}" r="40" fill="url(#mg)"/>`;
+    s += `<path d="M${cx - 22} ${cy - 18} L${cx - 8} ${cy - 30}" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".8"/>`;
+    return s + `</svg>`;
+  },
+  bag(rope, bg) {
+    const d = shade(rope, .78);
+    let s = svgOpen(bg) + `<path d="M72 96 Q72 40 100 40 Q128 40 128 96" stroke="${WOOD}" stroke-width="7" fill="none" stroke-linecap="round"/>`;
+    s += `<defs><clipPath id="bc"><path d="M52 96 H148 Q154 96 154 104 L146 196 Q144 208 132 208 H68 Q56 208 54 196 L46 104 Q46 96 52 96 Z"/></clipPath></defs>`;
+    s += `<path d="M52 96 H148 Q154 96 154 104 L146 196 Q144 208 132 208 H68 Q56 208 54 196 L46 104 Q46 96 52 96 Z" fill="${shade(rope, .9)}"/>`;
+    s += `<g clip-path="url(#bc)">`;
+    for (let i = -8; i < 12; i++) {
+      s += `<path d="M${i * 16} 90 L${i * 16 + 130} 220" stroke="${rope}" stroke-width="4"/>`;
+      s += `<path d="M${i * 16 + 130} 90 L${i * 16} 220" stroke="${rope}" stroke-width="4"/>`;
+    }
+    s += `</g><rect x="46" y="92" width="108" height="10" rx="5" fill="${d}"/>`;
+    for (let i = 0; i < 18; i++) s += `<path d="M${60 + i * 4.7} 206 L${60 + i * 4.7} 226" stroke="${rope}" stroke-width="2.4" stroke-linecap="round"/>`;
+    return s + `</svg>`;
+  },
+  coaster(rope, bg) {
+    const d = shade(rope, .78);
+    let s = svgOpen(bg);
+    [[72, 150, 0], [128, 150, 0], [100, 100, 0]].forEach(([x, y]) => {
+      for (let i = 0; i < 28; i++) {
+        const a = i / 28 * Math.PI * 2;
+        s += `<path d="M${x + Math.cos(a) * 34} ${y + Math.sin(a) * 34} L${x + Math.cos(a) * 42} ${y + Math.sin(a) * 42}" stroke="${rope}" stroke-width="2" stroke-linecap="round"/>`;
+      }
+      s += `<circle cx="${x}" cy="${y}" r="35" fill="${rope}" stroke="${d}"/>`;
+      [26, 17, 8].forEach(r => s += `<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${d}" stroke-width="2" stroke-dasharray="4 3"/>`);
+    });
+    return s + `</svg>`;
+  },
+  key(rope, bg) {
+    const d = shade(rope, .78);
+    let s = svgOpen(bg) + `<circle cx="100" cy="40" r="16" fill="none" stroke="#9AA0A3" stroke-width="4"/>`;
+    s += `<rect x="96" y="54" width="8" height="12" fill="#9AA0A3"/>`;
+    s += `<rect x="82" y="66" width="36" height="76" rx="12" fill="${rope}" stroke="${d}"/>`;
+    for (let i = 0; i < 5; i++) s += `<path d="M84 ${78 + i * 13} L100 ${86 + i * 13} L116 ${78 + i * 13}" stroke="${d}" stroke-width="2.4" fill="none"/>`;
+    s += `<circle cx="100" cy="154" r="11" fill="${WOOD}"/><circle cx="96" cy="150" r="3" fill="${shade(WOOD, 1.25)}"/>`;
+    for (let i = -5; i <= 5; i++) s += `<path d="M100 164 L${100 + i * 3} 214" stroke="${rope}" stroke-width="2.4" stroke-linecap="round"/>`;
+    return s + `</svg>`;
+  },
+  runner(rope, bg) {
+    const d = shade(rope, .78);
+    let s = svgOpen(bg) + `<path d="M10 150 L190 150 L190 236 L10 236 Z" fill="${shade(bg, .9)}"/>`;
+    s += `<path d="M70 30 L130 30 L150 220 L50 220 Z" fill="${shade(rope, .92)}"/>`;
+    for (let i = 0; i < 8; i++) {
+      const y = 44 + i * 22, w = 30 + i * 2.8;
+      s += `<path d="M100 ${y - 8} L${100 + w * .45} ${y} L100 ${y + 8} L${100 - w * .45} ${y} Z" fill="none" stroke="${d}" stroke-width="2.4"/>`;
+      s += `<circle cx="${100 - w * .8}" cy="${y}" r="3" fill="${d}"/><circle cx="${100 + w * .8}" cy="${y}" r="3" fill="${d}"/>`;
+    }
+    for (let i = 0; i < 16; i++) s += `<path d="M${53 + i * 6.2} 220 L${51 + i * 6.4} 240" stroke="${rope}" stroke-width="2.4" stroke-linecap="round"/>`;
+    for (let i = 0; i < 12; i++) s += `<path d="M${72 + i * 5} 30 L${72 + i * 5} 16" stroke="${rope}" stroke-width="2.2" stroke-linecap="round"/>`;
+    return s + `</svg>`;
+  },
+  cushion(rope, bg) {
+    const d = shade(rope, .78);
+    let s = svgOpen(bg) + `<rect x="34" y="64" width="132" height="132" rx="26" fill="${shade(rope, .92)}"/>`;
+    for (let r = 0; r < 6; r++) for (let c = 0; c < 6; c++) {
+      if ((r + c) % 2) continue;
+      s += `<ellipse cx="${52 + c * 19.5}" cy="${84 + r * 19.5}" rx="7" ry="5" fill="${rope}" stroke="${d}"/>`;
+    }
+    for (let i = 0; i < 20; i++) s += `<path d="M${40 + i * 6.3} 196 L${40 + i * 6.3} 214" stroke="${rope}" stroke-width="2.2" stroke-linecap="round"/>`;
+    return s + `</svg>`;
+  },
+  maker(bg) {
+    // abstract portrait placeholder: hands + cords
+    let s = svgOpen(bg, "0 0 200 220") + `<rect x="0" y="0" width="200" height="40" fill="${WOOD}" opacity=".9"/>`;
+    for (let i = 0; i < 16; i++) s += `<path d="M${30 + i * 9.3} 40 C ${30 + i * 9.3} 90, ${100 + (i - 8) * 4} 110, ${100 + (i - 8) * 5} 220" stroke="#E8DCC3" stroke-width="3.5" fill="none"/>`;
+    s += `<ellipse cx="62" cy="150" rx="30" ry="22" fill="#C99A7E"/><ellipse cx="138" cy="150" rx="30" ry="22" fill="#C99A7E"/>`;
+    s += `<rect x="84" y="120" width="32" height="26" rx="10" fill="#E8DCC3" stroke="#BCAF95"/>`;
+    s += `<text x="100" y="208" text-anchor="middle" font-family="Vazirmatn,Tahoma" font-size="10" fill="#5B6862">عکس نمونه: دست‌های بافنده</text>`;
+    return s + `</svg>`;
+  },
+  skein(bg) {
+    let s = svgOpen(bg, "0 0 200 200");
+    for (let i = 0; i < 14; i++) s += `<ellipse cx="100" cy="100" rx="${70 - i}" ry="${36 - i * .6}" fill="none" stroke="#E8DCC3" stroke-width="3" transform="rotate(${-18 + i * 2.2} 100 100)"/>`;
+    s += `<rect x="86" y="62" width="28" height="76" rx="6" fill="#0E7A72"/><text x="100" y="104" text-anchor="middle" fill="#fff" font-size="12" font-family="Vazirmatn,Tahoma">۴ میل</text>`;
+    return s + `</svg>`;
+  },
+  knot(bg) {
+    let s = svgOpen(bg, "0 0 200 200");
+    s += `<path d="M70 20 V180 M130 20 V180" stroke="#E8DCC3" stroke-width="7"/>`;
+    for (let i = 0; i < 4; i++) {
+      const y = 48 + i * 34;
+      s += `<path d="M44 ${y} Q100 ${y - 22} 156 ${y} Q100 ${y + 22} 44 ${y}" stroke="#D2C4A6" stroke-width="8" fill="#E8DCC3"/>`;
+    }
+    return s + `</svg>`;
+  },
+  box(bg) {
+    let s = svgOpen(bg, "0 0 200 200");
+    s += `<rect x="40" y="76" width="120" height="96" rx="8" fill="#C9A577"/><rect x="34" y="62" width="132" height="24" rx="6" fill="#B58F60"/>`;
+    s += `<rect x="94" y="62" width="12" height="110" fill="#0E7A72"/><path d="M100 62 C 80 30, 60 50, 100 62 C 140 50, 120 30, 100 62" fill="none" stroke="#0E7A72" stroke-width="6"/>`;
+    s += `<rect x="120" y="110" width="34" height="22" rx="3" fill="#FAFAF6" transform="rotate(-8 137 121)"/>`;
+    return s + `</svg>`;
+  },
+};
+
+/* ================= data (sample) ================= */
+const CATS = [
+  { id: "wall",    name: "دیوارکوب",       note: "از ۵۲۰ هزار", art: (c, b) => ART.wall(c, b) },
+  { id: "plant",   name: "آویز گلدان",     note: "از ۲۹۰ هزار", art: (c, b) => ART.plant(c, b) },
+  { id: "mirror",  name: "آینه",           note: "از ۲۶۰ هزار", art: (c, b) => ART.mirror(c, b) },
+  { id: "bag",     name: "کیف",            note: "از ۶۸۰ هزار", art: (c, b) => ART.bag(c, b) },
+  { id: "coaster", name: "زیرلیوانی",      note: "ست ۴ عددی",   art: (c, b) => ART.coaster(c, b) },
+  { id: "key",     name: "جاکلیدی و آویز", note: "از ۹۵ هزار",  art: (c, b) => ART.key(c, b) },
+  { id: "runner",  name: "رانر و رومیزی",  note: "سفارشی",      art: (c, b) => ART.runner(c, b) },
+  { id: "cushion", name: "کوسن",           note: "از ۶۵۰ هزار", art: (c, b) => ART.cushion(c, b) },
+];
+const catById = Object.fromEntries(CATS.map(c => [c.id, c]));
+
+const PRODUCTS = [
+  { id: 1, cat: "wall",   title: "دیوارکوب مکرومه طرح برگ دست‌بافت", color: "cream",  colors: ["cream", "white", "olive"], sizes: [["۴۰×۸۰", 890000], ["۶۰×۱۰۰", 1290000]], tag: ["hot", "پرفروش"], ready: true },
+  { id: 2, cat: "plant",  title: "آویز گلدان مکرومه سقفی «نیلوفر»",  color: "cream",  colors: ["cream", "grey", "olive", "rose"], sizes: [["۹۰ سانتی", 290000], ["۱۱۰ سانتی", 340000]], tag: ["ready", "آماده ارسال"], ready: true },
+  { id: 3, cat: "mirror", title: "آینه مکرومه خورشیدی",              color: "white",  colors: ["white", "cream", "rose"], sizes: [["قطر ۲۵", 260000], ["قطر ۳۰", 390000], ["قطر ۴۰", 520000]], tag: ["hot", "پرفروش"], ready: true },
+  { id: 4, cat: "bag",    title: "کیف مجلسی مکرومه با دسته‌ی چوبی",  color: "rose",   colors: ["rose", "cream", "mustard"], sizes: [["کوچک", 680000], ["متوسط", 1150000]], tag: ["custom", "سفارشی"], ready: false },
+  { id: 5, cat: "coaster",title: "ست ۴ عددی زیرلیوانی مکرومه",        color: "mustard",colors: ["mustard", "cream", "olive", "grey"], sizes: [["قطر ۱۰", 180000]], tag: ["ready", "آماده ارسال"], ready: true },
+  { id: 6, cat: "key",    title: "جاکلیدی مکرومه با مهره‌ی چوبی",    color: "olive",  colors: ["olive", "cream", "rose", "mustard"], sizes: [["استاندارد", 95000]], tag: ["ready", "آماده ارسال"], ready: true },
+  { id: 7, cat: "runner", title: "رانر مکرومه بوهو ۱۸۰ سانتی",       color: "cream",  colors: ["cream", "grey"], sizes: [["۳۰×۱۸۰", 1850000], ["۴۰×۲۰۰", 2350000]], tag: ["custom", "سفارشی"], ready: false },
+  { id: 8, cat: "wall",   title: "دیوارکوب مکرومه مینیمال",           color: "grey",   colors: ["grey", "white", "cream"], sizes: [["۳۰×۵۰", 520000], ["۴۰×۶۰", 690000]], tag: ["ready", "آماده ارسال"], ready: true },
+];
+const pById = Object.fromEntries(PRODUCTS.map(p => [p.id, p]));
+const bgFor = id => BG[id % BG.length];
+const artFor = (p, color = p.color, bg = bgFor(p.id)) => catById[p.cat].art(COLORS[color].rope, bg);
+const basePrice = p => p.sizes[0][1];
+
+/* ================= categories row (3D coverflow) ================= */
+const catsEl = $("#cats");
+catsEl.innerHTML = CATS.map((c, i) =>
+  `<a class="cat" href="#products" data-cat="${c.id}">
+     <div class="thumb">${c.art(COLORS[["cream", "olive", "white", "rose", "mustard", "grey", "cream", "white"][i]].rope, BG[i % BG.length])}</div>
+     <div class="cap"><b>${c.name}</b><small>${c.note}</small></div>
+   </a>`).join("");
+
+function coverflow() {
+  if (reduceMotion) return;
+  const box = catsEl.getBoundingClientRect(), mid = box.left + box.width / 2;
+  for (const el of catsEl.children) {
+    const r = el.getBoundingClientRect();
+    const d = clamp(((r.left + r.width / 2) - mid) / (box.width / 2), -1.2, 1.2);
+    el.style.transform = `rotateY(${(-d * 22).toFixed(2)}deg) translateZ(${(-Math.abs(d) * 40).toFixed(1)}px)`;
+  }
+}
+catsEl.addEventListener("scroll", () => requestAnimationFrame(coverflow), { passive: true });
+catsEl.addEventListener("click", e => {
+  const a = e.target.closest(".cat"); if (!a) return;
+  setFilter(a.dataset.cat);
+});
+
+/* ================= product grid + filters ================= */
+const FILTERS = [["all", "همه"], ["ready", "آماده ارسال"], ...CATS.slice(0, 6).map(c => [c.id, c.name])];
+let filter = "all", query = "", budget = 0;
+const favs = new Set();
+const chipsEl = $("#chips"), gridEl = $("#grid");
+chipsEl.innerHTML = FILTERS.map(([id, n]) => `<button class="chip" type="button" data-f="${id}" aria-pressed="${id === "all"}">${n}</button>`).join("");
+chipsEl.addEventListener("click", e => { const b = e.target.closest(".chip"); if (b) setFilter(b.dataset.f); });
+
+function setFilter(f) {
+  filter = f; budget = 0;
+  $$(".chip", chipsEl).forEach(b => b.setAttribute("aria-pressed", String(b.dataset.f === f)));
+  renderGrid();
+}
+
+function renderGrid() {
+  const q = query.trim();
+  const list = PRODUCTS.filter(p =>
+    (filter === "all" || (filter === "ready" ? p.ready : p.cat === filter)) &&
+    (!q || p.title.includes(q) || catById[p.cat].name.includes(q)) &&
+    (!budget || basePrice(p) <= budget));
+  gridEl.innerHTML = list.length ? list.map(p => `
+    <article class="card" data-id="${p.id}">
+      <button class="card-media" type="button" data-quick="${p.id}" aria-label="مشاهده ${p.title}">
+        ${artFor(p)}
+        <span class="tag ${p.tag[0]}">${p.tag[1]}</span>
+        <span class="sample">عکس نمونه</span>
+      </button>
+      <button class="fav" type="button" data-fav="${p.id}" aria-pressed="${favs.has(p.id)}" aria-label="علاقه‌مندی">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
+      </button>
+      <div class="card-body">
+        <h3 class="card-title">${p.title}</h3>
+        <div class="card-meta"><bdi>${COLORS[p.color].name}</bdi> · <bdi>${p.sizes[0][0]}</bdi>${p.colors.length > 1 ? ` · <bdi>${fa(p.colors.length)} رنگ</bdi>` : ""}</div>
+        <div class="card-row">
+          <span class="price">${p.sizes.length > 1 ? "از " : ""}${toman(basePrice(p))}</span>
+          <button class="add" type="button" data-add="${p.id}" aria-label="افزودن ${p.title} به سبد">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+      </div>
+    </article>`).join("")
+    : `<p class="empty">محصولی با این مشخصات پیدا نشد. فیلتر را عوض کنید یا <a href="#custom">سفارش سفارشی</a> بدهید.</p>`;
+  $$(".card", gridEl).forEach(c => c.style.position = "relative");
+  bindTilt();
+}
+
+gridEl.addEventListener("click", e => {
+  const q = e.target.closest("[data-quick]"), a = e.target.closest("[data-add]"), f = e.target.closest("[data-fav]");
+  if (q) openSheet(+q.dataset.quick, q);
+  else if (a) { const p = pById[+a.dataset.add]; addToCart(p, p.color, 0, 1); }
+  else if (f) {
+    const id = +f.dataset.fav; favs.has(id) ? favs.delete(id) : favs.add(id);
+    f.setAttribute("aria-pressed", String(favs.has(id)));
+    toast(favs.has(id) ? "به علاقه‌مندی‌ها اضافه شد" : "از علاقه‌مندی‌ها حذف شد");
+  }
+});
+
+/* subtle 3D tilt on pointer devices */
+function bindTilt() {
+  if (reduceMotion || !matchMedia("(hover: hover)").matches) return;
+  $$(".card", gridEl).forEach(card => {
+    card.addEventListener("pointermove", e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      card.style.transform = `perspective(800px) rotateX(${(-y * 6).toFixed(2)}deg) rotateY(${(x * 8).toFixed(2)}deg) translateY(-4px)`;
+    });
+    card.addEventListener("pointerleave", () => card.style.transform = "");
+  });
+}
+
+/* gift budget shortcuts */
+$$(".gift[data-budget]").forEach(g => g.addEventListener("click", () => {
+  filter = "all"; budget = +g.dataset.budget;
+  $$(".chip", chipsEl).forEach(b => b.setAttribute("aria-pressed", String(b.dataset.f === "all")));
+  renderGrid();
+  toast(`محصولات زیر ${fa(budget)} تومان`);
+}));
+
+/* search */
+const searchBtn = $("#searchBtn"), searchPanel = $("#searchPanel"), qInput = $("#q");
+searchBtn.addEventListener("click", () => {
+  const open = searchPanel.hidden;
+  searchPanel.hidden = !open; searchBtn.setAttribute("aria-expanded", String(open));
+  if (open) qInput.focus();
+});
+qInput.addEventListener("input", () => {
+  query = qInput.value; renderGrid();
+  if (query) $("#products").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+});
+$("#menuBtn").addEventListener("click", () => $("#categories").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" }));
+
+/* ================= cart ================= */
+const cart = [];
+const FREE_SHIP = 1500000;
+function addToCart(p, color, sizeIdx, qty) {
+  const key = `${p.id}-${color}-${sizeIdx}`;
+  const line = cart.find(l => l.key === key);
+  if (line) line.qty += qty; else cart.push({ key, p, color, sizeIdx, qty });
+  renderCart();
+  toast("به سبد خرید اضافه شد ✓");
+}
+function renderCart() {
+  const count = cart.reduce((s, l) => s + l.qty, 0);
+  const total = cart.reduce((s, l) => s + l.qty * l.p.sizes[l.sizeIdx][1], 0);
+  $$("[data-cart-count]").forEach(b => { b.textContent = fa(count); b.dataset.n = count; });
+  $("#cartItems").innerHTML = cart.length ? cart.map(l => `
+    <div class="line">
+      <div class="th">${artFor(l.p, l.color)}</div>
+      <div><b>${l.p.title}</b><small><bdi>${COLORS[l.color].name}</bdi> · <bdi>${l.p.sizes[l.sizeIdx][0]}</bdi> · <bdi>${fa(l.qty)} عدد</bdi></small></div>
+      <div style="text-align:left"><div class="price">${toman(l.qty * l.p.sizes[l.sizeIdx][1])}</div><button class="rm" data-rm="${l.key}" type="button">حذف</button></div>
+    </div>`).join("")
+    : `<p class="empty">سبد خرید خالی است.</p>`;
+  $("#cartTotal").innerHTML = toman(total);
+  const left = FREE_SHIP - total;
+  $("#freeShipText").textContent = total === 0 ? `ارسال رایگان برای خرید بالای ${fa(FREE_SHIP)} تومان`
+    : left > 0 ? `${fa(left)} تومان تا ارسال رایگان` : "ارسال این سفارش رایگان است";
+  $("#freeShipBar").style.width = `${clamp(total / FREE_SHIP * 100, 0, 100)}%`;
+}
+$("#cartItems").addEventListener("click", e => {
+  const b = e.target.closest("[data-rm]"); if (!b) return;
+  cart.splice(cart.findIndex(l => l.key === b.dataset.rm), 1); renderCart();
+});
+$("#checkout").addEventListener("click", () => toast(cart.length ? "در نسخه‌ی نهایی به صفحه‌ی پرداخت می‌رود" : "اول یک محصول اضافه کنید"));
+
+/* ================= overlays (sheet + drawer) ================= */
+const scrim = $("#scrim"), sheet = $("#sheet"), drawer = $("#drawer");
+let lastFocus = null, openEl = null;
+function openLayer(el, focusFrom) {
+  lastFocus = focusFrom || document.activeElement; openEl = el;
+  scrim.hidden = false; el.hidden = false;
+  document.body.style.overflow = "hidden";
+  requestAnimationFrame(() => { scrim.classList.add("show"); el.classList.add("show"); });
+  setTimeout(() => (el.querySelector("button, [href], input") || el).focus(), 60);
+}
+function closeLayer() {
+  if (!openEl) return;
+  const el = openEl; openEl = null;
+  scrim.classList.remove("show"); el.classList.remove("show");
+  document.body.style.overflow = "";
+  setTimeout(() => { el.hidden = true; scrim.hidden = true; }, reduceMotion ? 0 : 300);
+  lastFocus && lastFocus.focus();
+}
+scrim.addEventListener("click", closeLayer);
+$("#sheetClose").addEventListener("click", closeLayer);
+$("#drawerClose").addEventListener("click", closeLayer);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeLayer(); });
+$$("[data-open-cart]").forEach(b => b.addEventListener("click", () => { renderCart(); openLayer(drawer, b); }));
+
+/* product quick view = product page template */
+let pd = { p: null, color: null, size: 0, qty: 1, view: 0 };
+function openSheet(id, from) {
+  const p = pById[id];
+  pd = { p, color: p.color, size: 0, qty: 1, view: 0 };
+  $("#pdCrumbs").textContent = `خانه / ${catById[p.cat].name} مکرومه`;
+  $("#pdTitle").textContent = p.title;
+  $("#pdSwatches").innerHTML = p.colors.map(c =>
+    `<input type="radio" name="pdc" id="pdc-${c}" value="${c}" ${c === p.color ? "checked" : ""}><label for="pdc-${c}" style="--sw:${COLORS[c].rope}" title="${COLORS[c].name}"><span class="sr-only">${COLORS[c].name}</span></label>`).join("");
+  $("#pdSizes").innerHTML = p.sizes.map(([n], i) =>
+    `<input type="radio" name="pds" id="pds-${i}" value="${i}" ${i === 0 ? "checked" : ""}><label for="pds-${i}">${n}</label>`).join("");
+  $("#pdShip").textContent = p.ready
+    ? "آماده ارسال: ۱ تا ۲ روز کاری بعد از سفارش تحویل پست می‌شود."
+    : "سفارشی: ۷ تا ۱۰ روز کاری بافته می‌شود. قبل از ارسال عکس آن را برایتان می‌فرستیم.";
+  $("#pdDesc").textContent = "این متن نمونه است. در نسخه‌ی نهایی برای هر محصول ۱۵۰ تا ۳۰۰ کلمه توضیح اختصاصی نوشته می‌شود: برای چه فضایی مناسب است، چه چیزی همراهش ارسال می‌شود و چطور نصب می‌شود.";
+  renderPd();
+  openLayer(sheet, from);
+}
+function renderPd() {
+  const { p, color, size, qty, view } = pd;
+  const views = [artFor(p, color), artFor(p, color, "#DCE3DD"), artFor(p, color, "#EFE9DE")];
+  $("#pdMain").innerHTML = views[view];
+  $("#pdThumbs").innerHTML = views.map((v, i) => `<button type="button" data-v="${i}" aria-pressed="${i === view}" aria-label="تصویر ${fa(i + 1)}">${v}</button>`).join("");
+  $("#pdColorName").textContent = COLORS[color].name;
+  $("#pdPrice").innerHTML = toman(p.sizes[size][1] * qty);
+  $("#pdLead").textContent = p.ready ? "آماده ارسال" : "سفارشی";
+  $("#qty").textContent = fa(qty);
+  $("#pdSpecs").innerHTML = [
+    ["ابعاد", p.sizes[size][0] + (/\d/.test(p.sizes[size][0]) && !/سانتی|قطر/.test(p.sizes[size][0]) ? " سانتی‌متر" : "")],
+    ["جنس نخ", "نخ پنبه‌ای نرم‌تاب ۴ میل"],
+    ["رنگ", COLORS[color].name],
+    ["قابل سفارش با رنگ دیگر", "بله"],
+    ["نگهداری", "گردگیری با برس نرم؛ شستشوی دستی با آب سرد"],
+  ].map(([k, v]) => `<tr><th scope="row">${k}</th><td>${v}</td></tr>`).join("");
+}
+$("#pdSwatches").addEventListener("change", e => { pd.color = e.target.value; renderPd(); });
+$("#pdSizes").addEventListener("change", e => { pd.size = +e.target.value; renderPd(); });
+$("#pdThumbs").addEventListener("click", e => { const b = e.target.closest("[data-v]"); if (b) { pd.view = +b.dataset.v; renderPd(); } });
+$("#qtyPlus").addEventListener("click", () => { pd.qty = Math.min(9, pd.qty + 1); renderPd(); });
+$("#qtyMinus").addEventListener("click", () => { pd.qty = Math.max(1, pd.qty - 1); renderPd(); });
+$("#pdAdd").addEventListener("click", () => { addToCart(pd.p, pd.color, pd.size, pd.qty); closeLayer(); });
+
+/* ================= toast ================= */
+let toastT;
+function toast(msg) {
+  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 1900);
+}
+
+/* ================= custom order builder ================= */
+const TYPES = [
+  { id: "wall",   name: "دیوارکوب",    base: 300000, perCm: 11000, days: [5, 10] },
+  { id: "plant",  name: "آویز گلدان",  base: 180000, perCm: 2500,  days: [3, 5] },
+  { id: "mirror", name: "آینه",        base: 120000, perCm: 7000,  days: [4, 7] },
+  { id: "runner", name: "رانر",        base: 500000, perCm: 9000,  days: [7, 12] },
+];
+const b = { type: "wall", color: "cream", width: 60 };
+$("#typeSeg").innerHTML = TYPES.map(t =>
+  `<input type="radio" name="btype" id="bt-${t.id}" value="${t.id}" ${t.id === b.type ? "checked" : ""}><label for="bt-${t.id}">${t.name}</label>`).join("");
+$("#swatches").innerHTML = Object.entries(COLORS).map(([k, c]) =>
+  `<input type="radio" name="bcolor" id="bc-${k}" value="${k}" ${k === b.color ? "checked" : ""}><label for="bc-${k}" style="--sw:${c.rope}" title="${c.name}"><span class="sr-only">${c.name}</span></label>`).join("");
+function renderBuilder() {
+  const t = TYPES.find(x => x.id === b.type), rope = COLORS[b.color].rope;
+  const w = clamp(b.width / 90, .45, 1.25);
+  const art = b.type === "wall" ? ART.wall(rope, "transparent", Math.min(w, 1)) : catById[b.type].art(rope, "transparent");
+  $("#builderSvg").innerHTML = art;
+  const svg = $("#builderSvg svg");
+  if (b.type !== "wall" && !reduceMotion) svg.style.transform = `scale(${(.7 + w * .3).toFixed(2)})`;
+  $("#colorName").textContent = COLORS[b.color].name;
+  $("#widthOut").textContent = `${fa(b.width)} سانتی‌متر`;
+  $("#rulerMax").textContent = `${fa(b.width)} سانتی‌متر`;
+  const price = Math.round((t.base + t.perCm * b.width) / 10000) * 10000;
+  $("#estPrice").textContent = `حدود ${fa(price)} تومان`;
+  const extra = Math.round((b.width - 30) / 30);
+  $("#estDays").textContent = `${fa(t.days[0] + extra)} تا ${fa(t.days[1] + extra)} روز کاری`;
+}
+$("#builderForm").addEventListener("change", e => {
+  if (e.target.name === "btype") b.type = e.target.value;
+  if (e.target.name === "bcolor") b.color = e.target.value;
+  renderBuilder();
+});
+$("#width").addEventListener("input", e => { b.width = +e.target.value; renderBuilder(); });
+$("#builderForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const ok = $("#formOk"), phone = $("#cphone").value.replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+  if (!/^09\d{9}$/.test(phone)) {
+    ok.hidden = false; ok.textContent = "شماره موبایل را ۱۱ رقمی و با ۰۹ وارد کنید، مثلاً ۰۹۱۲۱۲۳۴۵۶۷.";
+    $("#cphone").focus(); return;
+  }
+  ok.hidden = false;
+  ok.textContent = `درخواست ${TYPES.find(x => x.id === b.type).name} ${COLORS[b.color].name} با عرض ${fa(b.width)} سانتی‌متر ثبت شد. (در این قالب نمایشی چیزی ارسال نمی‌شود؛ در نسخه‌ی نهایی، درخواست به پنل فروشنده یا واتس‌اپ می‌رود.)`;
+});
+$("#newsForm").addEventListener("submit", e => { e.preventDefault(); toast("عضو خبرنامه شدید (نمایشی)"); });
+
+/* ================= process prism (scroll-driven CSS 3D) ================= */
+const prism = $("#prism"), steps = $$("#steps li");
+const faces = [["انتخاب نخ", ART.skein("#E6E9E1")], ["بافت با دست", ART.knot("#DFE7E4")], ["بسته‌بندی", ART.box("#ECE2DD")], ["مکرومینو", ART.wall("#E8DCC3", "#E9E4DA")]];
+function layoutPrism() {
+  const w = prism.offsetWidth, z = w / 2;
+  prism.innerHTML = faces.map(([label, svg], i) =>
+    `<div class="face" style="transform:rotateY(${i * -90}deg) translateZ(${z}px)">${svg}<span>${label}</span></div>`).join("");
+  prism.dataset.z = z;
+}
+function updatePrism() {
+  const r = $("#process").getBoundingClientRect(), vh = innerHeight;
+  const p = clamp((vh - r.top) / (vh + r.height), 0, 1);
+  const prog = clamp((p - .2) / .6, 0, 1);
+  const idx = Math.min(2, Math.floor(prog * 3));
+  steps.forEach((li, i) => li.classList.toggle("on", i === idx));
+  if (reduceMotion) { prism.style.transform = `translateZ(-${prism.dataset.z}px) rotateY(${idx * 90}deg)`; return; }
+  prism.style.transform = `translateZ(-${prism.dataset.z}px) rotateX(-8deg) rotateY(${(prog * 180).toFixed(1)}deg)`;
+}
+
+/* ================= hero 3D: macramé plant hanger (three.js) ================= */
+const hero = { progress: 0, visible: true, render: null };
+function initHero3D() {
+  const canvas = $("#hero3d"), stage = $("#stage");
+  let gl = null;
+  try { gl = window.THREE && canvas.getContext("webgl"); } catch (e) {}
+  if (!window.THREE || !gl) {
+    canvas.hidden = true;
+    const fb = $("#heroFallback"); fb.hidden = false; fb.innerHTML = ART.plant(COLORS.cream.rope, "transparent");
+    return;
+  }
+  const T = THREE;
+  const renderer = new T.WebGLRenderer({ canvas, context: gl, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+  renderer.outputEncoding = T.sRGBEncoding;
+  const scene = new T.Scene();
+  const camera = new T.PerspectiveCamera(30, 1, .1, 100);
+  camera.position.set(0, .1, 10.2);
+
+  scene.add(new T.HemisphereLight(0xffffff, 0x6d7f72, .85));
+  const key = new T.DirectionalLight(0xffffff, .95); key.position.set(3, 5, 5); scene.add(key);
+  const rim = new T.DirectionalLight(0xbfe3dd, .45); rim.position.set(-4, 2, -3); scene.add(rim);
+
+  const pivot = new T.Group(); pivot.position.y = 2.55; scene.add(pivot);
+  const g = new T.Group(); g.position.y = -2.55; pivot.add(g);
+
+  const ropeMat = new T.MeshStandardMaterial({ color: 0xe8dcc3, roughness: .95 });
+  const knotMat = new T.MeshStandardMaterial({ color: 0xdccfb2, roughness: .9 });
+  const woodMat = new T.MeshStandardMaterial({ color: 0xa97c4f, roughness: .6 });
+  const potMat = new T.MeshStandardMaterial({ color: 0x168a81, roughness: .28, metalness: .05 });
+  const leafMat = new T.MeshStandardMaterial({ color: 0x4e7c4b, roughness: .6, side: T.DoubleSide });
+  const soilMat = new T.MeshStandardMaterial({ color: 0x3b2a1e, roughness: 1 });
+
+  const ring = new T.Mesh(new T.TorusGeometry(.32, .05, 16, 48), woodMat); ring.position.y = 2.55; g.add(ring);
+  const wrapTop = new T.Mesh(new T.CylinderGeometry(.09, .09, .26, 20), knotMat); wrapTop.position.y = 2.06; g.add(wrapTop);
+
+  const P = (r, a, y) => new T.Vector3(r * Math.cos(a), y, r * Math.sin(a));
+  for (let i = 0; i < 8; i++) {
+    const grp = Math.floor(i / 2), side = i % 2 ? 1 : -1, G = grp * Math.PI / 2 + Math.PI / 4, a0 = i * Math.PI / 4;
+    const pts = [
+      P(.05, a0, 2.3), P(.06, a0, 2.0),
+      P(.12, G + side * .25, 1.82),
+      P(.32, G + side * .07, 1.5), P(.42, G + side * .06, 1.0),
+      P(.62, G + side * .35, .5), P(.72, G + side * Math.PI / 4, .1),
+      P(.68, G + side * .35, -.3), P(.48, G + side * .12, -.78),
+      P(.14, G, -1.2), P(.05, a0, -1.42),
+    ];
+    const curve = new T.CatmullRomCurve3(pts);
+    g.add(new T.Mesh(new T.TubeGeometry(curve, 140, .024, 6, false), ropeMat));
+  }
+  for (let grp = 0; grp < 4; grp++) {
+    const G = grp * Math.PI / 2 + Math.PI / 4;
+    for (let k = 0; k < 5; k++) {
+      const y = 1.45 - k * .11, r = .33 + k * .02;
+      const kn = new T.Mesh(new T.TorusGeometry(.06, .028, 10, 20), knotMat);
+      kn.position.copy(P(r, G, y)); kn.rotation.x = Math.PI / 2; kn.rotation.z = k * .6; g.add(kn);
+    }
+    const nk = new T.Mesh(new T.SphereGeometry(.07, 14, 12), knotMat);
+    nk.position.copy(P(.72, grp * Math.PI / 2, .1)); nk.scale.set(1, 1.35, 1); g.add(nk);
+  }
+  const wrapBot = new T.Mesh(new T.CylinderGeometry(.1, .1, .24, 20), knotMat); wrapBot.position.y = -1.52; g.add(wrapBot);
+  for (let i = 0; i < 30; i++) {
+    const a = Math.random() * Math.PI * 2, r = .03 + Math.random() * .17, len = 2.25 + Math.random() * .2;
+    const c = new T.CatmullRomCurve3([new T.Vector3(Math.cos(a) * .05, -1.62, Math.sin(a) * .05), new T.Vector3(Math.cos(a) * r * .7, -1.95, Math.sin(a) * r * .7), new T.Vector3(Math.cos(a) * r, -len, Math.sin(a) * r)]);
+    g.add(new T.Mesh(new T.TubeGeometry(c, 12, .013, 5, false), ropeMat));
+  }
+  const prof = [[.0, -.78], [.3, -.78], [.42, -.68], [.54, -.38], [.6, -.02], [.57, .18], [.61, .24], [.58, .27]].map(([x, y]) => new T.Vector2(x, y));
+  const pot = new T.Mesh(new T.LatheGeometry(prof, 48), potMat); g.add(pot);
+  const soil = new T.Mesh(new T.CircleGeometry(.56, 32), soilMat); soil.rotation.x = -Math.PI / 2; soil.position.y = .2; g.add(soil);
+  const leafGeo = new T.SphereGeometry(1, 16, 10);
+  for (let i = 0; i < 11; i++) {
+    const a = i / 11 * Math.PI * 2 + Math.random() * .3, tilt = .35 + Math.random() * .5;
+    const lf = new T.Mesh(leafGeo, leafMat);
+    lf.scale.set(.1, .34 + Math.random() * .12, .025);
+    lf.position.set(Math.cos(a) * .2, .5 + Math.random() * .15, Math.sin(a) * .2);
+    lf.rotation.set(Math.sin(a) * tilt, -a, -Math.cos(a) * tilt);
+    g.add(lf);
+  }
+  for (let i = 0; i < 6; i++) { // trailing pothos leaves over the rim
+    const a = i * 1.05 + .4, lf = new T.Mesh(leafGeo, leafMat);
+    lf.scale.set(.09, .15, .025);
+    lf.position.set(Math.cos(a) * .64, .05 - (i % 3) * .28, Math.sin(a) * .64);
+    lf.rotation.y = -a + Math.PI / 2;
+    g.add(lf);
+  }
+
+  let drag = 0, dragV = 0, lastX = null;
+  canvas.addEventListener("pointerdown", e => { lastX = e.clientX; });
+  addEventListener("pointerup", () => { lastX = null; });
+  canvas.addEventListener("pointermove", e => {
+    if (lastX == null) return;
+    dragV = (e.clientX - lastX) * .012; drag += dragV; lastX = e.clientX;
+  });
+  canvas.style.touchAction = "pan-y";
+
+  function resize() {
+    const r = stage.getBoundingClientRect();
+    renderer.setSize(r.width, r.height, false);
+    camera.aspect = r.width / r.height; camera.updateProjectionMatrix();
+  }
+  resize(); addEventListener("resize", resize);
+
+  const t0 = performance.now();
+  function frame(now) {
+    const t = (now - t0) / 1000, p = hero.progress;
+    if (lastX == null) { drag += dragV; dragV *= .92; }
+    pivot.rotation.y = (reduceMotion ? .5 : t * .22) + p * Math.PI * 1.6 + drag;
+    pivot.rotation.z = reduceMotion ? 0 : Math.sin(t * .9) * .035;
+    pivot.rotation.x = reduceMotion ? 0 : Math.sin(t * .7 + 1) * .02 + p * .15;
+    pivot.position.y = 2.55 + p * .5;
+    camera.position.z = 10.2 - p * 1.4;
+    renderer.render(scene, camera);
+  }
+  hero.render = frame;
+  frame(performance.now());
+  if (!reduceMotion) {
+    const loop = now => { if (hero.visible) frame(now); requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
+  }
+  new IntersectionObserver(([en]) => { hero.visible = en.isIntersecting; }).observe(stage);
+}
+
+/* ================= scroll coordinator ================= */
+const header = $(".header");
+let ticking = false;
+function onScroll() {
+  if (ticking) return; ticking = true;
+  requestAnimationFrame(() => {
+    ticking = false;
+    header.classList.toggle("scrolled", scrollY > 8);
+    const r = $("#stage").getBoundingClientRect();
+    hero.progress = clamp(-r.top / (r.height + 200), 0, 1);
+    if (reduceMotion && hero.render) hero.render(performance.now());
+    updatePrism();
+  });
+}
+addEventListener("scroll", onScroll, { passive: true });
+addEventListener("resize", () => { layoutPrism(); updatePrism(); coverflow(); });
+
+/* ================= boot ================= */
+$("#makerPhoto").innerHTML = ART.maker("#E3E7DE");
+renderGrid(); renderCart(); renderBuilder(); layoutPrism(); updatePrism(); coverflow();
+initHero3D();
+})();
+</script>
+</body>
+</html>
